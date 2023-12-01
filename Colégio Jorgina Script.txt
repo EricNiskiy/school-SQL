@@ -1,0 +1,254 @@
+CREATE TABLE Turmas (
+    id int primary key not null,
+    ano char(3) not null,
+    serie char(1) not null,
+    data_ano int not null,
+    turno varchar(10) not null,
+    unique (ano, serie, data_ano)
+);
+
+CREATE TABLE Usuarios (
+    rs_ra int primary key not null,
+    cargo varchar(15) not null,
+    senha varchar(15) not null,
+    nome varchar(40) not null,
+    email varchar(30) not null unique,
+	telefone varchar(30) not null unique,
+    id_turma int,
+    foreign key (id_turma) references Turmas (id)
+);
+
+
+CREATE TABLE Cronograma (
+    id int primary key not null,
+    rs_prof int not null,
+    disciplina varchar(20) not null,
+    id_turma int not null,
+    dia_semana varchar(15) not null,
+    foreign key (id_turma) references Turmas (id),
+    foreign key (rs_prof) references Usuarios (rs_ra)
+);
+
+CREATE TABLE Boletim (
+    id int primary key not null,
+    ra int not null,
+    disciplina varchar (20) not null,
+    bimestre int not null,
+    av1 float not null,
+	av2 float not null,
+    media float not null,
+    faltas int not null,
+    limite_faltas int not null,
+    situacao varchar(20) not null,
+    id_turma int not null,
+    foreign key (ra) references Usuarios (rs_ra),
+    foreign key (id_turma) references Turmas (id)
+);
+
+CREATE TABLE Ocorrencias(
+    id int primary key not null,
+    observacoes varchar(100) not null,
+    data_ocor date not null
+);
+
+CREATE TABLE Ocorrencias_alunos(
+    id_ocor int not null,
+    ra int not null,
+    foreign key (id_ocor) references Ocorrencias (id),
+    foreign key (ra) references Usuarios (rs_ra)
+);
+
+CREATE TABLE Contatos (
+    id int primary key not null,
+    email varchar(30),
+    telefone varchar(20),
+    mensagem varchar(30) not null,
+    dia date not null
+);
+
+insert into Turmas values (39, '5º', 'B', 2022, 'Tarde');
+insert into Turmas values (40, '7º', 'C', 2023, 'Manhã');
+insert into Turmas values (41, '8º', 'A', 2023, 'Integral');
+insert into Turmas values (42, '7º', 'C', 2024, 'Manhã');
+select * from Turmas order by ID asc;
+
+-- FUNCIONÁRIOS
+insert into Usuarios (RS_RA, cargo, senha, nome, email, telefone) 
+    values (2020569887, 'Professora', 'abc1234', 'Jorgina', 'jorgina.santos@cjs.edu.br', '(11) 99999-1000');
+insert into Usuarios (RS_RA, cargo, senha, nome, email, telefone) 
+    values (2222204885, 'Professora', 'abc1234', 'Marina', 'mari@cjs.edu.br', '(11) 99999-9999');
+insert into Usuarios (RS_RA, cargo, senha, nome, email, telefone) 
+    values (2222204888, 'Professora', 'abc1234', 'Márcia', 'marcinha@cjs.edu.br', '(11) 99999-1001');
+insert into Usuarios (RS_RA, cargo, senha, nome, email, telefone) 
+    values (2222204889, 'Professor', 'abc1234', 'Robson', 'rob@cjs.edu.br', '(11) 99999-1002');
+insert into Usuarios (RS_RA, cargo, senha, nome, email, telefone) 
+    values (2222204886, 'Professora', 'abc1234', 'Linda', 'linda@cjs.edu.br', '(11) 99999-1003');
+insert into Usuarios (RS_RA, cargo, senha, nome, email, telefone) 
+    values (2222204884, 'Professor', 'abc1234', 'Cleber', 'cleb@cjs.edu.br', '(11) 99999-1004');
+insert into Usuarios (RS_RA, cargo, senha, nome, email, telefone)
+    values (5555555555, 'Auxiliar Adm', 'xxxyyy', 'Chico Bento', 'chico1000@cjs.edu.br', '(11) 99999-1008');
+insert into Usuarios (RS_RA, cargo, senha, nome, email, telefone)
+    values (9999999999, 'Diretor', 'xxxyyy', 'Eduardo Costa', 'eduardo.costa@cjs.edu.br', '(11) 99999-1009');
+
+-- INSERÇÕES DOS ALUNOS
+insert into Usuarios values (2222204880, 'Aluno', 'abcd1234', 'Geovanna Vieira', 'geovanna.lascouse@cjs.edu.br', '(11) 99999-9998', 40);
+insert into Usuarios values (2222204890, 'Aluno', 'abcd1234', 'Eric Castro', 'eric.castro@cjs.edu.br', '(11) 99999-1006', 41);
+insert into Usuarios values (2222204891, 'Aluno', 'abcd1234', 'Rodrigo Mendes', 'rodrigo039@cjs.edu.br', '(11) 99999-1007', 40);
+	-- CONSULTAS USUÁRIOS
+select * from Usuarios;
+select * from Usuarios where cargo = 'Aluno';
+select * from Usuarios where cargo = 'Professor' OR cargo = 'Professora';
+select * from Usuarios where cargo = 'Auxiliar Adm';
+
+-- INSERÇÕES DO CRONOGRAMA
+insert into Cronograma values (1, 2020569887, 'Português', 40, 'Segunda');
+insert into Cronograma values (2, 2020569887, 'Inglês', 40, 'Segunda');
+insert into Cronograma values (3, 2222204888, 'Matemática', 40, 'Segunda');
+insert into Cronograma values (4, 2222204888, 'Física', 40, 'Segunda');
+insert into Cronograma values (5, 2222204889, 'Geografia', 40, 'Segunda');
+insert into Cronograma values (6, 2222204885, 'Filosofia', 40, 'Terça');
+insert into Cronograma values (7, 2222204885, 'Filosofia', 40, 'Terça');
+insert into Cronograma values (8, 2222204885, 'Sociologia', 40, 'Terça');
+insert into Cronograma values (9, 2020569887, 'Inglês', 41, 'Segunda');
+insert into Cronograma values (10, 2222204884, 'História', 41, 'Segunda');
+insert into Cronograma values (11, 2222204884, 'Geografia', 41, 'Segunda');
+insert into Cronograma values (12, 2222204885, 'Português', 41, 'Segunda');
+insert into Cronograma values (13, 2222204885, 'Filosofia', 41, 'Segunda');
+insert into Cronograma values (14, 2222204886, 'Matemática', 41, 'Terça');
+
+-- INSERÇÕES NO BOLETIM
+insert into Boletim values (1, 2222204880, 'Português', 2, 10, 9, 9.5, 3, 15, 'Aprovado', 40);
+insert into Boletim values (2, 2222204880, 'Matemática', 2, 8, 7, 7.5, 0, 15, 'Aprovado', 40);
+select * from Boletim;
+
+-- INSERÇÕES OCORRÊNCIAS
+insert into Ocorrencias values (100, 'Quebrou nariz do colega', to_date('31/08/2023', 'DD/MM/YYYY'));
+insert into Ocorrencias_alunos values (100, 2222204890);
+insert into Ocorrencias_alunos values (100, 2222204891);
+
+insert into Ocorrencias values (101, 'Passou mal', to_date('22/10/2023', 'DD/MM/YYYY'));
+insert into Ocorrencias_alunos values (101, 2222204880);
+
+-- INSERÇÕES CONTATOS 
+insert into Contatos values (1, 'davicosta@gmail.com', '(11) 98888-8888', 'Matrícula', to_date('22/09/2023', 'DD/MM/YYYY'));
+insert into Contatos (id, email, mensagem, dia) values (2, 'lucy22@gmail.com', 'Documentação', to_date('17/12/2023', 'DD/MM/YYYY'));
+insert into Contatos (id, telefone, mensagem, dia) values (3, '(11) 99876-5432', 'Documentação', to_date('21/11/2023', 'DD/MM/YYYY'));
+select * from Contatos;
+
+-- CONSULTA OCORRÊNCIAS
+	-- DETALHADO
+select ocor.*, us.nome "Envolvidos", us.rs_ra "RA dos envolvidos" 
+    from Ocorrencias ocor inner join Ocorrencias_alunos ocorAlu ON ocor.id = ocorAlu.id_ocor
+    	inner join Usuarios us ON ocorAlu.ra = us.rs_ra
+    order by ocor.id asc;
+	-- SIMPLIFICADO
+select ocor.*, ocorAlu.ra "Envolvidos" from Ocorrencias ocor inner join Ocorrencias_alunos ocorAlu ON ocor.id = ocorAlu.id_ocor order by ocor.id asc;
+
+-- CONSULTA CRONOGRAMA GERAL
+	-- DETALHADO
+select cr.dia_semana, cr.disciplina, us.nome "Professor(a)"
+    from Cronograma cr inner join Usuarios us ON cr.rs_prof = us.rs_ra
+    where cr.id_turma = 40 and dia_semana = 'Segunda';
+
+select cr.dia_semana, cr.disciplina, us.nome "Professor(a)"
+    from Cronograma cr inner join Usuarios us ON cr.rs_prof = us.rs_ra
+    where cr.id_turma = 40 and dia_semana = 'Terça';
+
+select cr.dia_semana, cr.disciplina, us.nome "Professor(a)"
+    from Cronograma cr inner join Usuarios us ON cr.rs_prof = us.rs_ra
+    where cr.id_turma = 41 and dia_semana = 'Segunda';
+
+select cr.dia_semana, cr.disciplina, us.nome "Professor(a)"
+    from Cronograma cr inner join Usuarios us ON cr.rs_prof = us.rs_ra
+    where cr.id_turma = 41 and dia_semana = 'Terça';
+    -- SIMPLIFICADO
+select * from Cronograma where id_turma = 40 and dia_semana = 'Segunda';
+select * from Cronograma where id_turma = 40 and dia_semana = 'Terça';
+select * from Cronograma where id_turma = 41 and dia_semana = 'Segunda';
+select * from Cronograma where id_turma = 41 and dia_semana = 'Terça';
+
+-- PROFESSORES QUE DÃO AULA À DETERMINADA TURMA
+	-- DETALHADO
+select distinct us.nome "Professor(a)", t.ano, t.serie, t.data_ano
+    from Usuarios us inner join Cronograma cr ON us.rs_ra = cr.rs_prof
+    	inner join Turmas t ON cr.id_turma = t.id
+    where t.id = 40 order by us.nome asc;
+select distinct us.nome "Professor(a)", t.ano, t.serie, t.data_ano
+    from Usuarios us inner join Cronograma cr ON us.rs_ra = cr.rs_prof
+    	inner join Turmas t ON cr.id_turma = t.id
+    where t.id = 41 order by us.nome asc;
+	-- SIMPLIFICADO
+select distinct us.nome "Professor(a)", cr.id_turma "Turma"
+	from Usuarios us inner join Cronograma cr ON us.rs_ra = cr.rs_prof
+    where cr.id_turma = 40 order by us.nome asc;
+select distinct us.nome "Professor(a)", cr.id_turma "Turma"
+	from Usuarios us inner join Cronograma cr ON us.rs_ra = cr.rs_prof
+    where cr.id_turma = 41 order by us.nome asc;
+
+-- DISCIPLINAS POR TURMA
+	-- DETALHADO
+select distinct cr.disciplina, t.ano, t.serie, t.data_ano
+    from Cronograma cr inner join Turmas t ON cr.id_turma = t.id
+    where t.id = 40;
+select distinct cr.disciplina, t.ano, t.serie, t.data_ano
+    from Cronograma cr inner join Turmas t ON cr.id_turma = t.id
+    where t.id = 41;
+	-- SIMPLIFICADO
+select distinct disciplina from Cronograma where id_turma = 40;
+select distinct disciplina from Cronograma where id_turma = 41;
+
+-- DISCIPLINAS EM CADA DIA DA SEMANA PARA DETERMINADA TURMA
+	-- DETALHADO
+select t.ano, t.serie, t.data_ano, cr.dia_semana, cr.disciplina
+    from Cronograma cr inner join Turmas t ON cr.id_turma = t.id
+    where t.id = 40;
+select t.ano, t.serie, t.data_ano, cr.dia_semana, cr.disciplina
+    from Cronograma cr inner join Turmas t ON cr.id_turma = t.id
+    where t.id = 41;
+	-- SIMPLIFICADO
+select dia_semana, disciplina from Cronograma where id_turma = 40;
+select dia_semana, disciplina from Cronograma where id_turma = 41;
+
+-- TODAS TURMAS QUE UM DADO PROFESSOR MINISTRA AULA
+	-- DETALHADO
+select distinct us.nome, us.rs_ra, t.ano, t.serie, t.data_ano
+    from Cronograma cr inner join Usuarios us ON cr.rs_prof = us.rs_ra
+    	inner join Turmas t ON t.id = cr.id_turma
+    where us.rs_ra = 2020569887;
+select distinct us.nome, us.rs_ra, t.ano, t.serie, t.data_ano
+    from Cronograma cr inner join Usuarios us ON cr.rs_prof = us.rs_ra
+    	inner join Turmas t ON t.id = cr.id_turma
+    where us.rs_ra = 2222204888;
+select distinct us.nome, us.rs_ra, t.ano, t.serie, t.data_ano
+    from Cronograma cr inner join Usuarios us ON cr.rs_prof = us.rs_ra
+    	inner join Turmas t ON t.id = cr.id_turma
+    where us.rs_ra = 2222204885;
+	-- SIMPLIFICADO
+select distinct us.nome, us.rs_ra, cr.id_turma, cr.dia_semana
+    from Cronograma cr inner join Usuarios us ON cr.rs_prof = us.rs_ra
+    where us.rs_ra = 2020569887;
+select distinct us.nome, us.rs_ra, cr.id_turma, cr.dia_semana
+    from Cronograma cr inner join Usuarios us ON cr.rs_prof = us.rs_ra
+    where us.rs_ra = 2222204888;
+select distinct us.nome, us.rs_ra, cr.id_turma, cr.dia_semana
+    from Cronograma cr inner join Usuarios us ON cr.rs_prof = us.rs_ra
+    where us.rs_ra = 2222204885;
+
+
+-- VER BOLETIM DE UM DETERMINADO ALUNO E SUA TURMA
+select b.bimestre, b.id_turma, b.disciplina, b.av1, b.av2, b.media, b.faltas, b.situacao, b.limite_faltas, t.ano, t.serie, t.data_ano
+	from Boletim b inner join Usuarios us ON us.rs_ra = b.ra
+    	inner join Turmas t ON us.id_turma = t.id
+	where us.rs_ra = 2222204880;
+	-- OU
+select b.bimestre, b.id_turma, b.disciplina, b.av1, b.av2, b.media, b.faltas, b.situacao, b.limite_faltas, t.ano, t.serie, t.data_ano
+	from Boletim b inner join Usuarios us ON us.rs_ra = b.ra
+    	inner join Turmas t ON us.id_turma = t.id
+	where us.nome = 'Geovanna Vieira';
+
+-- VER BOLETIM POR + ALGUM FILTRO
+select b.disciplina, b.bimestre, b.av1, b.av2, b.media, b.faltas, b.limite_faltas, b.situacao, t.ano, t.serie, t.data_ano
+	from Usuarios us inner join Boletim b ON us.rs_ra = b.ra
+    	inner join Turmas t ON us.id_turma = t.id
+	where us.nome = 'Geovanna Vieira' AND b.disciplina = 'Matemática';
+	/* NO FILTRO WHERE, APÓS O AND SERÁ POSTO O FILTRO ADICIONAL */
